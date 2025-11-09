@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>VRweld — The Future of Trade Education</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* --- STYLES FROM FILE 1 (For Hero) --- */
+    :root{
+      --brand-blue: #00A9E0;
+      --brand-blue-dark: #0087b3;
+      --accent: #FF7A00;
+      --glass: rgba(255,255,255,0.6);
+    }
+
+    html,body { 
+        height:100%; 
+        scroll-behavior: smooth; /* Added from File 2 */
+    }
+    body {
+      font-family: 'Roboto', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      /* Using File 1's background for the hero */
+      background: linear-gradient(180deg,#ffffff 0%, #fcfdff 40%, #f7fbff 100%);
+      color: #0f172a;
+      overflow-x: hidden; /* Added from File 2 */
+    }
+
+    /* Headline family weight (Merged) */
+    h1, h2, h3, h4, h5, h6, .nav-link, .stat-text, .cta-button {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+    }
+
+    /* File 1 Hero Headline Style */
+    .hero-headline { line-height:1.02; letter-spacing:-0.01em; }
+    @media(min-width:768px){ .hero-headline { font-size:4.5rem } }
+    @media(min-width:1280px){ .hero-headline { font-size:5.25rem } }
+
+    /* Navigation */
+    header { backdrop-filter: blur(6px); }
+
+    /* 3D card tilt (From File 1) */
+    .tilt-card { transition: transform 0.12s ease-out; transform-style: preserve-3d; will-change: transform; }
+    .floating { animation: floatY 6s ease-in-out infinite; }
+    @keyframes floatY { 0% { transform: translateY(0px);} 50% { transform: translateY(-8px);} 100% { transform: translateY(0px);} }
+
+    /* subtle glow */
+    .glow {
+      box-shadow: 0 6px 30px rgba(0,169,224,0.12), inset 0 -6px 30px rgba(0,169,224,0.02);
+    }
+
+    /* embed styling */
+    .embed-frame { border-radius: 14px; overflow:hidden; box-shadow: 0 18px 40px rgba(2,6,23,0.08); border: 1px solid rgba(11,17,27,0.03); }
+
+    /* spark canvas overlay */
+    .spark-canvas {
+      position: absolute;
+      left:0; top:0;
+      width:100%; height:100%;
+      pointer-events: none; /* hits pass through to page */
+      mix-blend-mode: screen;
+    }
+
+    /* badge */
+    .badge { background: linear-gradient(90deg, rgba(255,138,61,0.12), rgba(0,169,224,0.06)); color: var(--brand-blue); padding: 6px 10px; border-radius: 999px; font-weight:700; font-size:0.9rem; display:inline-flex; gap:8px; align-items:center; }
+
+    /* small scrollbar for embed row */
+    .scroll-snap {
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+    }
+    .embed-card { scroll-snap-align: center; min-width: 320px; width: 320px; }
+
+    /* CTA style */
+    .btn-brand { background: var(--brand-blue); color: white; }
+    .btn-ghost { background: rgba(255,255,255,0.7); border:1px solid rgba(15,23,42,0.06); }
+    
+    @media(min-width:1024px){
+      .nav-desktop { display:flex !important; }
+    }
+
+
+    /* --- STYLES FROM FILE 2 (For Content) --- */
+    
+    /* Removed .hero-headline from File 2 as we use File 1's */
+    
+    .brand-blue { color: #00A9E0; }
+    .bg-brand-blue { background-color: #00A9E0; }
+    .border-brand-blue { border-color: #00A9E0; }
+    .hover\:bg-brand-blue-dark:hover { background-color: #0087b3; }
+    
+    /* Animated gradient background */
+    .gradient-bg {
+        background: linear-gradient(-45deg, #0a0a0a, #1a1a2e, #00A9E0, #0087b3);
+        background-size: 400% 400%;
+        animation: gradientBG 15s ease infinite;
+    }
+    
+    @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    
+    /* 3D Card Effects */
+    .card-3d {
+        transform-style: preserve-3d;
+        transition: transform 0.6s cubic-bezier(0.23, 1, 0.320, 1);
+        position: relative;
+    }
+    
+    .card-3d:hover {
+        transform: translateY(-10px) rotateX(5deg) rotateY(5deg) scale(1.02);
+    }
+    
+    .card-3d::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        padding: 2px;
+        background: linear-gradient(135deg, #00A9E0, #0087b3, #00A9E0);
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        opacity: 0;
+        transition: opacity 0.6s;
+    }
+    
+    .card-3d:hover::before {
+        opacity: 1;
+    }
+    
+    /* Glassmorphism */
+    .glass {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    /* Floating Animation */
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-20px); }
+    }
+    
+    .float-animation {
+        animation: float 6s ease-in-out infinite;
+    }
+    
+    /* VR Grid Background */
+    .vr-grid {
+        background-image:  
+            linear-gradient(rgba(0, 169, 224, 0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0, 169, 224, 0.1) 1px, transparent 1px);
+        background-size: 50px 50px;
+        position: relative;
+    }
+    
+    .vr-grid::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at 50% 50%, transparent 0%, rgba(0, 0, 0, 0.8) 100%);
+    }
+    
+    /* Glowing Badge */
+    .badge-glow {
+        position: relative;
+        animation: pulse 2s ease-in-out infinite;
+    }
+    
+    @keyframes pulse {
+        0%, 100% { box-shadow: 0 0 20px rgba(0, 169, 224, 0.5); }
+        50% { box-shadow: 0 0 40px rgba(0, 169, 224, 0.8); }
+    }
+    
+    /* Interactive button effects */
+    .btn-3d {
+        position: relative;
+        transform-style: preserve-3d;
+        transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1);
+    }
+    
+    .btn-3d::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
+        border-radius: inherit;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+    
+    .btn-3d:hover::before {
+        opacity: 1;
+    }
+    
+    .btn-3d:hover {
+        transform: translateY(-2px) scale(1.05);
+        box-shadow: 0 20px 40px rgba(0, 169, 224, 0.4);
+    }
+    
+    .btn-3d:active {
+        transform: translateY(0) scale(0.98);
+    }
+    
+    /* Holographic effect */
+    .holographic {
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .holographic::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(
+            45deg,
+            transparent 30%,
+            rgba(255, 255, 255, 0.1) 50%,
+            transparent 70%
+        );
+        transform: rotate(45deg);
+        animation: hologram 3s linear infinite;
+    }
+    
+    @keyframes hologram {
+        0% { transform: translateX(-100%) rotate(45deg); }
+        100% { transform: translateX(100%) rotate(45deg); }
+    }
+    
+    /* Stats counter animation */
+    .stat-number {
+        font-size: 3rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #00A9E0, #0087b3);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    
+    /* Cyber border */
+    .cyber-border {
+        position: relative;
+        padding: 2px;
+        background: linear-gradient(90deg, #00A9E0, #0087b3, #00A9E0);
+        background-size: 200% 100%;
+        animation: borderFlow 3s linear infinite;
+        border-radius: inherit;
+    }
+    
+    @keyframes borderFlow {
+        0% { background-position: 0% 50%; }
+        100% { background-position: 200% 50%; }
+    }
+    
+    .cyber-border-inner {
+        background: white;
+        border-radius: inherit;
+    }
+    
+    /* Feature icon hover */
+    .feature-icon {
+        transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+    
+    .feature-icon:hover {
+        transform: rotateY(360deg) scale(1.2);
+    }
+    
+    /* Video container with border effect (Not used by hero, but by content) */
+    .video-container {
+        position: relative;
+        border-radius: 1rem;
+        overflow: hidden;
+        box-shadow: 0 25px 50px -12px rgba(0, 169, 224, 0.5);
+    }
+    
+    .video-container::before {
+        content: '';
+        position: absolute;
+        inset: -2px;
+        background: linear-gradient(45deg, #00A9E0, #0087b3, #00A9E0, #0087b3);
+        background-size: 300% 300%;
+        animation: borderGlow 4s ease infinite;
+        border-radius: inherit;
+        z-index: -1;
+    }
+    
+    @keyframes borderGlow {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+    }
+    
+    /* Scroll reveal */
+    .reveal {
+        opacity: 0;
+        transform: translateY(50px);
+        transition: all 0.8s cubic-bezier(0.23, 1, 0.320, 1);
+    }
+    
+    .reveal.active {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    /* Particle background */
+    .particles {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        overflow: hidden;
+        pointer-events: none;
+    }
+    
+    .particle {
+        position: absolute;
+        width: 4px;
+        height: 4px;
+        background: rgba(0, 169, 224, 0.5);
+        border-radius: 50%;
+        animation: particleFloat 20s linear infinite;
+    }
+    
+    @keyframes particleFloat {
+        0% {
+            transform: translateY(100vh) translateX(0);
+            opacity: 0;
+        }
+        10% {
+            opacity: 1;
+        }
+        90% {
+            opacity: 1;
+        }
+        100% {
+            transform: translateY(-100vh) translateX(100px);
+            opacity: 0;
+        }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-md">
+    <nav class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="#" class="flex items-center gap-3">
+        <svg width="36" height="36" viewBox="0 0 24 24" class="rounded-full p-1" fill="none" xmlns="http://www.w3.org/2000/svg" style="background:linear-gradient(180deg,#00a9e0,#007ea8);box-shadow:0 6px 18px rgba(0,169,224,0.14);">
+          <path d="M3 12h18" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>
+          <path d="M6 7.5h.01M6 16.5h.01" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+        <span class="text-2xl font-bold">VRweld</span>
+      </a>
+
+      <div class="hidden md:flex items-center gap-8 text-gray-700">
+        <a class="nav-link" href="#system">System</a>
+        <a class="nav-link" href="#educators">Educators</a>
+        <a class="nav-link" href="#learners">Learners</a>
+        <a class="nav-link" href="#pilot">Pilot</a>
+      </div>
+
+      <div class="hidden md:flex items-center gap-3">
+        <a href="#pilot" class="px-4 py-2 rounded-full btn-brand hover:opacity-95 transition">Request Pilot</a>
+      </div>
+
+      <div class="md:hidden">
+        <button id="mobileToggle" class="p-2 rounded-md" aria-label="Open menu" onclick="document.getElementById('mobileMenu').classList.toggle('hidden')">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h16" stroke="#0f172a" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </nav>
+
+    <div id="mobileMenu" class="md:hidden px-6 pb-6 hidden">
+      <div class="flex flex-col gap-2">
+        <a href="#system" class="py-2">System</a>
+        <a href="#educators" class="py-2">Educators</a>
+        <a href="#learners" class="py-2">Learners</a>
+        <a href="#pilot" class="py-2">Pilot</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="relative">
+
+    <section id="hero" class="max-w-7xl mx-auto px-6 pt-16 pb-12 md:pt-28 md:pb-20">
+      <div class="lg:grid lg:grid-cols-12 gap-12 items-center">
+        <div class="lg:col-span-6">
+          <div class="badge mb-4">New — 90-Day School Pilot</div>
+
+          <h1 class="hero-headline text-4xl md:text-5xl text-slate-900">
+            A complete trade school.
+            <br class="hidden md:inline" />
+            On one headset.
+          </h1>
+
+          <p class="mt-6 text-lg md:text-xl text-slate-600 max-w-xl">
+            Gamified, curriculum-driven VR that teaches welding, blueprint reading, and the math trades use — with zero consumable costs and no risk. Launch a safe, scalable lab in weeks.
+          </p>
+
+          <div class="mt-8 flex gap-4 flex-wrap">
+            <a id="requestPilotHero" href="#pilot" class="px-5 py-3 rounded-full btn-brand hover:shadow-lg transition transform hover:-translate-y-0.5">Request a Pilot</a>
+            <button id="startDemoBtn" class="px-5 py-3 rounded-full btn-ghost border hover:shadow-md" title="Start a short welding demo">Start Weld Demo</button>
+            <a href="#system" class="px-4 py-3 rounded-full bg-white text-slate-700 border hover:shadow-sm">Explore the System</a>
+          </div>
+
+          <div class="mt-8 flex gap-6 flex-wrap items-center">
+            <div class="flex items-center gap-3">
+              <div class="text-2xl font-bold">30+</div>
+              <div class="text-sm text-slate-600">Schools piloting</div>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="text-2xl font-bold">95%</div>
+              <div class="text-sm text-slate-600">Student engagement</div>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="text-2xl font-bold">0</div>
+              <div class="text-sm text-slate-600">Consumable cost per trainee</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-6 mt-8 lg:mt-0">
+          <div id="mediaCard" class="relative tilt-card embed-frame bg-white rounded-2xl p-4 lg:p-6">
+            <div class="relative overflow-hidden rounded-xl">
+              <div id="heroMedia" class="relative w-full h-56 md:h-72 lg:h-96 rounded-xl overflow-hidden">
+                <iframe class="w-full h-full" style="border-radius:12px" frameborder="0" src="https://imgflip.com/embed/abapqz" aria-label="VRweld demo animation"></iframe>
+              </div>
+
+              <canvas id="sparkCanvas" class="spark-canvas" aria-hidden="true"></canvas>
+
+              <div class="absolute bottom-4 left-4 flex items-center gap-3">
+                <div class="p-2 bg-white/90 rounded-full shadow-sm flex items-center gap-2">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3 21h12" stroke="#0f172a" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M8 21v-8l6-3 4 1 1 4-5 7" stroke="#0f172a" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M5 7c2-2 5 0 5 2" stroke="#FF7A00" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+
+                  <div>
+                    <div class="text-xs text-slate-500">Live Demo</div>
+                    <div class="text-sm font-bold">Weld Mode</div>
+                  </div>
+                </div>
+
+                <button id="cardStartBtn" class="px-3 py-2 rounded-full bg-gradient-to-r from-yellow-400 to-orange-400 text-white font-semibold shadow hover:scale-[1.02] transition" aria-pressed="false">Start Weld</button>
+              </div>
+            </div>
+
+            <div class="mt-4">
+              <div class="text-sm text-slate-500 mb-2">Assets</div>
+
+              <div class="flex gap-4 overflow-x-auto scroll-snap pb-3">
+                <div class="embed-card embed-frame shrink-0 p-2">
+                  <div style="width:100%;max-width:100%;">
+                    <div style="height:0;padding-bottom:56.11%;position:relative;">
+                      <iframe width="360" height="202" style="position:absolute;top:0;left:0;width:100%;height:100%;border-radius:12px;" frameBorder="0" src="https://imgflip.com/embed/abct9a" title="asset 1"></iframe>
+                    </div>
+                    <p class="text-xs text-slate-400 mt-2"><a href="https://imgflip.com/gif/abct9a" class="hover:underline">via Imgflip</a></p>
+                  </div>
+                </div>
+
+                <div class="embed-card embed-frame shrink-0 p-2">
+                  <div style="width:100%;max-width:100%;">
+                    <div style="height:0;padding-bottom:56.11%;position:relative;">
+                      <iframe width="360" height="202" style="position:absolute;top:0;left:0;width:100%;height:100%;border-radius:12px;" frameBorder="0" src="https://imgflip.com/embed/abcsx6" title="asset 2"></iframe>
+                    </div>
+                    <p class="text-xs text-slate-400 mt-2"><a href="https://imgflip.com/gif/abcsx6" class="hover:underline">via Imgflip</a></p>
+                  </div>
+                </div>
+
+                <div class="embed-card embed-frame shrink-0 p-2">
+                  <div style="width:100%;max-width:100%;">
+                    <div style="height:0;padding-bottom:56.11%;position:relative;">
+                      <iframe width="360" height="202" style="position:absolute;top:0;left:0;width:100%;height:100%;border-radius:12px;" frameBorder="0" src="https://imgflip.com/embed/abct3q" title="asset 3"></iframe>
+                    </div>
+                    <p class="text-xs text-slate-400 mt-2"><a href="https://imgflip.com/gif/abct3q" class="hover:underline">via Imgflip</a></p>
+                  </div>
+                </div>
+
+                <div class="embed-card embed-frame shrink-0 p-2 hidden lg:block">
+                  <div style="height:0;padding-bottom:56.11%;position:relative;">
+                    <iframe width="360" height="202" style="position:absolute;top:0;left:0;width:100%;height:100%;border-radius:12px;" frameBorder="0" src="https://imgflip.com/embed/abapqz" title="extra asset"></iframe>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div> </div>
+      </div>
+    </section>
+
+    <section class="py-16 md:py-32 bg-gray-50 vr-grid">
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="max-w-3xl mx-auto text-center reveal">
+                <h2 class="text-4xl md:text-5xl font-bold tracking-tight">
+                    Stop burning cash.
+                    <br>
+                    Start building skills.
+                </h2>
+                <p class="mt-6 text-lg md:text-xl text-gray-600">
+                    Traditional training is costly, dangerous, and slow. Other VR simulators are just as expensive, tethered to bulky PCs. VRweld is different.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8 mt-16 md:mt-24">
+                <div class="card-3d p-8 bg-white rounded-2xl shadow-lg reveal">
+                    <div class="text-5xl mb-4">⚠️</div>
+                    <h3 class="text-2xl font-bold stat-text">Physical Labs</h3>
+                    <p class="mt-3 text-gray-600">High cost of materials, high risk of injury, and limited student throughput. You're paying for every mistake.</p>
+                </div>
+                <div class="card-3d p-8 bg-white rounded-2xl shadow-lg reveal">
+                    <div class="text-5xl mb-4">🖥️</div>
+                    <h3 class="text-2xl font-bold stat-text">Bulky Simulators</h3>
+                    <p class="mt-3 text-gray-600">Requires $50k+ in extra hardware, complex setup, and is permanently tethered to a PC. Maintenance is a nightmare.</p>
+                </div>
+                <div class="card-3d p-8 bg-white rounded-2xl shadow-2xl cyber-border reveal">
+                    <div class="cyber-border-inner p-6 rounded-2xl">
+                        <div class="text-5xl mb-4">🎮</div>
+                        <h3 class="text-2xl font-bold stat-text text-brand-blue">The VRweld Way</h3>
+                        <p class="mt-3 text-gray-600">Just one Oculus headset. No extra parts. No maintenance. No cords. And free updates. <strong class="text-gray-900">Forever.</strong></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="system" class="py-24 md:py-40 relative overflow-hidden">
+        <div class="container mx-auto px-6">
+            <div class="max-w-3xl mx-auto text-center mb-16 md:mb-24 reveal">
+                <h2 class="text-4xl md:text-5xl font-bold tracking-tight">
+                    It's an educational system.
+                    <br>
+                    Not just a "burn the metal" app.
+                </h2>
+            </div>
+            
+            <div class="md:flex md:gap-16">
+                <div class="md:w-1/2 md:sticky md:top-24 h-64 md:h-[70vh] mb-8 md:mb-0">
+                    <div class="holographic w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 rounded-3xl flex items-center justify-center shadow-2xl overflow-hidden card-3d">
+                         <img src="https://i.imgur.com/33XG04U.png" alt="Oculus Quest headset showing VRweld interface" class="w-2/3 h-2/3 object-contain float-animation">
+                    </div>
+                </div>
+
+                <div class="md:w-1/2 flex flex-col gap-12 md:gap-24">
+                    <div class="p-6 border-l-4 border-brand-blue card-3d reveal">
+                        <div class="text-4xl mb-3">⚡</div>
+                        <h3 class="text-2xl font-bold stat-text">All 4 Weld Types</h3>
+                        <p class="mt-3 text-lg text-gray-600">Master MIG, TIG, Stick, and Flux-Core in one safe, repeatable environment. Our simulation includes dynamic puddles, realistic "dime stack" effects, and arc behavior.</p>
+                    </div>
+                    <div class="p-6 border-l-4 border-gray-300 card-3d reveal">
+                        <div class="text-4xl mb-3">📐</div>
+                        <h3 class="text-2xl font-bold stat-text">Teaches Math & Blueprints</h3>
+                        <p class="mt-3 text-lg text-gray-600">We built the curriculum *into* the game. Learn the fractions, angles, and symbols welders actually use through interactive games and blueprint-reading challenges.</p>
+                    </div>
+                    <div class="p-6 border-l-4 border-gray-300 card-3d reveal">
+                        <div class="text-4xl mb-3">🤖</div>
+                        <h3 class="text-2xl font-bold stat-text">AI-Powered Instructor</h3>
+                        <p class="mt-3 text-lg text-gray-600">No welding expert on-site? No problem. Our smart AI guide provides instant, real-time feedback on angle, speed, and distance, so any teacher can confidently run a VR lab.</p>
+                    </div>
+                    <div class="p-6 border-l-4 border-gray-300 card-3d reveal">
+                        <div class="text-4xl mb-3">🎯</div>
+                        <h3 class="text-2xl font-bold stat-text">Real-Time Skill Testing</h3>
+                        <p class="mt-3 text-lg text-gray-600">This isn't just practice. Interactive quizzes and scenario-based tests challenge students to prove their knowledge, earning badges for performance.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="educators" class="py-24 md:py-40 gradient-bg text-white relative overflow-hidden">
+        <div class="particles" id="particles2"></div>
+        <div class="container mx-auto px-6 text-center relative z-10">
+            <div class="reveal">
+                <h2 class="text-4xl md:text-6xl font-bold tracking-tight">
+                    The only true multiplayer classroom.
+                </h2>
+                <p class="mt-8 max-w-2xl mx-auto text-xl md:text-2xl text-gray-300">
+                    Train together from anywhere. Our multiplayer labs let instructors and students share the same virtual space for real-time guidance, demonstrations, and collaboration.
+                </p>
+            </div>
+            
+            <div class="max-w-5xl mx-auto glass h-96 md:h-[500px] rounded-3xl mt-16 md:mt-24 shadow-2xl flex items-center justify-center holographic card-3d reveal p-8">
+                <div class="text-center flex flex-col items-center">
+                    <div class="w-24 h-24 bg-white/30 rounded-full flex items-center justify-center border-4 border-white/50 mb-6 transition-all hover:scale-110 cursor-pointer">
+                        <svg class="w-12 h-12 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z"></path>
+                        </svg>
+                    </div>
+                    <p class="text-gray-200 text-lg font-semibold">Play Demo: The Multiplayer VR Classroom</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="learners" class="py-24 md:py-32 bg-white">
+        <div class="container mx-auto px-6 text-center">
+            <div class="reveal">
+                <h2 class="text-4xl md:text-5xl font-bold tracking-tight">
+                    Practice. Perfect. Certify.
+                </h2>
+                <p class="mt-6 max-w-2xl mx-auto text-lg md:text-xl text-gray-600">
+                    This isn't a boring simulation. It's a game. Complete challenges, earn rewards, and test your skills in fun mini-games that make learning addictive.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto mt-16 md:mt-24">
+                <div class="flex flex-col items-center reveal">
+                    <div class="w-32 h-32 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center shadow-lg badge-glow feature-icon">
+                        <span class="text-5xl">🏆</span>
+                    </div>
+                    <h4 class="mt-4 text-xl font-bold stat-text">MIG Master</h4>
+                </div>
+                <div class="flex flex-col items-center reveal">
+                    <div class="w-32 h-32 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center shadow-lg badge-glow feature-icon">
+                        <span class="text-5xl">📐</span>
+                    </div>
+                    <h4 class="mt-4 text-xl font-bold stat-text">Blueprint Pro</h4>
+                </div>
+                <div class="flex flex-col items-center reveal">
+                    <div class="w-32 h-32 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex items-center justify-center shadow-lg badge-glow feature-icon">
+                        <span class="text-5xl">⚡️</span>
+                    </div>
+                    <h4 class="mt-4 text-xl font-bold stat-text">TIG Expert</h4>
+                </div>
+                <div class="flex flex-col items-center reveal">
+                    <div class="w-32 h-32 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center shadow-lg badge-glow feature-icon">
+                        <span class="text-5xl">🛡️</span>
+                    </div>
+                    <h4 class="mt-4 text-xl font-bold stat-text">Safety First</h4>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="pilot" class="py-24 md:py-32 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <div class="grid md:grid-cols-2 gap-16 items-center">
+                <div class="bg-white p-8 md:p-12 rounded-3xl shadow-2xl card-3d reveal">
+                    <h3 class="text-3xl font-bold mb-2">Start your 90-Day Pilot</h3>
+                    <p class="text-gray-600 mb-8">See the cost savings and skill gains for yourself. Fill out this form and our team will build a pilot package for your school, district, or training center.</p>
+                    
+                    <form action="#" method="POST" class="space-y-6" onsubmit="handleSubmit(event)">
+                        <div>
+                            <label for="name" class="block text-sm font-medium text-gray-700">Full Name</label>
+                            <input type="text" id="name" name="name" required class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-blue transition-all">
+                        </div>
+                        <div>
+                            <label for="organization" class="block text-sm font-medium text-gray-700">School / Organization</label>
+                            <input type="text" id="organization" name="organization" required class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-blue transition-all">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700">Work Email</label>
+                            <input type="email" id="email" name="email" required class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-blue transition-all">
+                        </div>
+                        <div>
+                            <button type="submit" class="cta-button btn-3d w-full bg-brand-blue text-white py-4 px-6 rounded-lg text-lg font-bold hover:bg-brand-blue-dark transition-all">
+                                Request Pilot Info
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="text-left reveal">
+                    <h2 class="text-4xl md:text-5xl font-bold tracking-tight">
+                        Launch a VR lab in 30 days.
+                    </h2>
+                    <p class="mt-6 text-lg md:text-xl text-gray-600">
+                        Our pilot program is designed for success. We don't just send you headsets; we partner with you to ensure a smooth launch.
+                    </p>
+                    <ul class="mt-8 space-y-4">
+                        <li class="flex items-start text-lg card-3d p-4 bg-white rounded-lg">
+                            <span class="text-brand-blue text-2xl mr-3">✓</span>
+                            <span class="text-gray-700">Onboarding & training for your instructors (even non-welders).</span>
+                        </li>
+                        <li class="flex items-start text-lg card-3d p-4 bg-white rounded-lg">
+                            <span class="text-brand-blue text-2xl mr-3">✓</span>
+                            <span class="text-gray-700">Full access to our curriculum and AI-instructor.</span>
+                        </li>
+                        <li class="flex items-start text-lg card-3d p-4 bg-white rounded-lg">
+                            <span class="text-brand-blue text-2xl mr-3">✓</span>
+                            <span class="text-gray-700">A dedicated success manager and clear ROI reporting.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-24 md:py-32 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-4xl md:text-5xl font-bold tracking-tight">
+                    Loved by educators and students
+                </h2>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <div class="card-3d p-8 bg-gradient-to-br from-gray-50 to-white rounded-2xl shadow-lg reveal">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-brand-blue rounded-full flex items-center justify-center text-white font-bold text-xl">JD</div>
+                        <div class="ml-4">
+                            <h4 class="font-bold">John Davis</h4>
+                            <p class="text-sm text-gray-600">Welding Instructor</p>
+                        </div>
+                    </div>
+                    <div class="text-yellow-400 text-xl mb-3">★★★★★</div>
+                    <p class="text-gray-700">"VRweld completely transformed our program. Students are more engaged, and we've cut material costs by 80%. The AI instructor is incredible!"</p>
+                </div>
+                
+                <div class="card-3d p-8 bg-gradient-to-br from-gray-50 to-white rounded-2xl shadow-lg reveal">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-brand-blue rounded-full flex items-center justify-center text-white font-bold text-xl">SM</div>
+                        <div class="ml-4">
+                            <h4 class="font-bold">Sarah Martinez</h4>
+                            <p class="text-sm text-gray-600">Career Tech Director</p>
+                        </div>
+                    </div>
+                    <div class="text-yellow-400 text-xl mb-3">★★★★★</div>
+                    <p class="text-gray-700">"Setup was incredibly easy. Within two weeks, we had 30 students training simultaneously with zero safety incidents. Game-changer!"</p>
+                </div>
+                
+                <div class="card-3d p-8 bg-gradient-to-br from-gray-50 to-white rounded-2xl shadow-lg reveal">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-brand-blue rounded-full flex items-center justify-center text-white font-bold text-xl">AL</div>
+                        <div class="ml-4">
+                            <h4 class="font-bold">Alex Lee</h4>
+                            <p class="text-sm text-gray-600">Student</p>
+                        </div>
+                    </div>
+                    <div class="text-yellow-400 text-xl mb-3">★★★★★</div>
+                    <p class="text-gray-700">"I learned more in VR in 2 months than I did in a year of traditional classes. The badges and challenges kept me motivated every day!"</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-24 md:py-32 bg-gray-50">
+        <div class="container mx-auto px-6 max-w-4xl">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-4xl md:text-5xl font-bold tracking-tight">
+                    Frequently Asked Questions
+                </h2>
+            </div>
+            
+            <div class="space-y-4">
+                <div class="faq-item card-3d bg-white rounded-xl shadow-lg overflow-hidden reveal">
+                    <button class="faq-question w-full text-left p-6 flex justify-between items-center font-bold text-lg hover:bg-gray-50 transition-colors" onclick="toggleFAQ(this)">
+                        <span>What equipment do we need?</span>
+                        <svg class="w-6 h-6 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div class="faq-answer hidden p-6 pt-0 text-gray-600">
+                        Just an Oculus Quest headset for each student. No PCs, no cables, no additional hardware. We even help you source the headsets at educational pricing.
+                    </div>
+                </div>
+                
+                <div class="faq-item card-3d bg-white rounded-xl shadow-lg overflow-hidden reveal">
+                    <button class="faq-question w-full text-left p-6 flex justify-between items-center font-bold text-lg hover:bg-gray-50 transition-colors" onclick="toggleFAQ(this)">
+                        <span>Do instructors need welding experience?</span>
+                        <svg class="w-6 h-6 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div class="faq-answer hidden p-6 pt-0 text-gray-600">
+                        No! Our AI instructor provides real-time feedback, so any teacher can confidently run a VR welding lab. We also provide comprehensive training for all instructors.
+                    </div>
+                </div>
+                
+                <div class="faq-item card-3d bg-white rounded-xl shadow-lg overflow-hidden reveal">
+                    <button class="faq-question w-full text-left p-6 flex justify-between items-center font-bold text-lg hover:bg-gray-50 transition-colors" onclick="toggleFAQ(this)">
+                        <span>How long does setup take?</span>
+                        <svg class="w-6 h-6 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div class="faq-answer hidden p-6 pt-0 text-gray-600">
+                        Most schools are up and running within 30 days. The headsets arrive pre-configured, and our team provides onboarding and support throughout the process.
+                    </div>
+                </div>
+                
+                <div class="faq-item card-3d bg-white rounded-xl shadow-lg overflow-hidden reveal">
+                    <button class="faq-question w-full text-left p-6 flex justify-between items-center font-bold text-lg hover:bg-gray-50 transition-colors" onclick="toggleFAQ(this)">
+                        <span>Can students use this at home?</span>
+                        <svg class="w-6 h-6 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div class="faq-answer hidden p-6 pt-0 text-gray-600">
+                        Absolutely! Students can practice anywhere, anytime. The multiplayer feature even allows instructors to join students remotely for live guidance.
+                    </div>
+                </div>
+                
+                <div class="faq-item card-3d bg-white rounded-xl shadow-lg overflow-hidden reveal">
+                    <button class="faq-question w-full text-left p-6 flex justify-between items-center font-bold text-lg hover:bg-gray-50 transition-colors" onclick="toggleFAQ(this)">
+                        <span>What about certification?</span>
+                        <svg class="w-6 h-6 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div class="faq-answer hidden p-6 pt-0 text-gray-600">
+                        VRweld prepares students for real-world certification tests. While VR practice doesn't replace physical testing for official certification, it dramatically improves first-time pass rates.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-24 md:py-40 gradient-bg text-white relative overflow-hidden">
+        <div class="particles" id="particles3"></div>
+        <div class="container mx-auto px-6 text-center relative z-10">
+            <div class="reveal">
+                <h2 class="text-4xl md:text-6xl font-bold tracking-tight mb-8">
+                    Ready to revolutionize your welding program?
+                </h2>
+                <p class="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto mb-12">
+                    Join hundreds of schools already using VRweld to train the next generation of skilled welders.
+                </p>
+                <a href="#pilot" class="cta-button btn-3d bg-white text-brand-blue py-4 px-12 rounded-full text-xl font-bold hover:scale-110 inline-block">
+                    Start Your Free Pilot
+                </a>
+            </div>
+        </div>
+    </section>
+
+  </main>
+
+  <footer id="pricing" class="bg-gray-900 text-gray-400 py-24">
+      <div class="container mx-auto px-6">
+          <div class="grid md:grid-cols-4 lg:grid-cols-5 gap-12">
+              <div class="lg:col-span-2">
+                  <a href="#" class="text-3xl font-bold tracking-tighter text-white">
+                      VRweld
+                  </a>
+                  <p class="mt-4 max-w-xs">
+                      Gamifying welding with virtual reality to enrich young professionals and diversify the trades.
+                  </p>
+                  <p class="mt-4 text-sm">&copy; 2025 VRweld. All rights reserved.</p>
+              </div>
+              <div>
+                  <h5 class="text-lg font-bold text-white nav-link">Product</h5>
+                  <ul class="mt-4 space-y-3">
+                      <li><a href="#system" class="hover:text-white transition-colors">The System</a></li>
+                      <li><a href="#learners" class="hover:text-white transition-colors">For Learners</a></li>
+                      <li><a href="#educators" class="hover:text-white transition-colors">For Educators</a></li>
+                      <li><a href="#pilot" class="hover:text-white transition-colors">Request a Pilot</a></li>
+                  </ul>
+              </div>
+              <div>
+                  <h5 class="text-lg font-bold text-white nav-link">Company</h5>
+                  <ul class="mt-4 space-y-3">
+                      <li><a href="#" class="hover:text-white transition-colors">About Us</a></li>
+                      <li><a href="#" class="hover:text-white transition-colors">Blog</a></li>
+                      <li><a href="#" class="hover:text-white transition-colors">Careers</a></li>
+                      <li><a href="#" class="hover:text-white transition-colors">Contact</a></li>
+                  </ul>
+              </div>
+              <div>
+                  <h5 class="text-lg font-bold text-white nav-link">Legal</h5>
+                  <ul class="mt-4 space-y-3">
+                      <li><a href="#" class="hover:text-white transition-colors">Privacy Policy</a></li>
+                      <li><a href="#" class="hover:text-white transition-colors">Terms of Service</a></li>
+                      <li><a href="#" class="hover:text-white transition-colors">Safety Disclaimer</a></li>
+                  </ul>
+                  <div class="flex space-x-4 mt-6">
+                      <a href="#" aria-label="LinkedIn" class="hover:text-white transition-all hover:scale-110">
+                          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                          </svg>
+                      </a>
+                      <a href="#" aria-label="YouTube" class="hover:text-white transition-all hover:scale-110">
+                          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 4-8 4z"/>
+                          </svg>
+                      </a>
+                      <a href="#" aria-label="TikTok" class="hover:text-white transition-all hover:scale-110">
+                          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-2.43.05-4.84-.66-6.37-2.53-1.04-1.29-1.6-2.82-1.6-4.39-.01-2.32.01-4.63-.01-6.95.02-1.51.57-3.02 1.66-4.11 1.11-1.11 2.7-1.62 4.24-1.79v4.03c-1.44.05-2.89.35-4.2.97-.57.26-1.1.59-1.62.93-.01-1.09.01-2.18-.02-3.27a.03.03 0 01.01-.02c.11-.2.24-.4.38-.58.4-.51.85-.94 1.35-1.3.8-.59 1.7-.95 2.65-1.15.29-.06.59-.1.89-.11.65-.03 1.3-.04 1.95-.04z"/>
+                          </svg>
+                      </a>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </footer>
+
+  <script>
+    // --------------- 3D Parallax tilt for media card (From File 1) ---------------
+    (function(){
+      const card = document.getElementById('mediaCard');
+      const hero = document.getElementById('hero');
+      if(!card || !hero) return;
+
+      hero.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const cx = rect.left + rect.width/2;
+        const cy = rect.top + rect.height/2;
+        const dx = e.clientX - cx;
+        const dy = e.clientY - cy;
+        const rx = (-dy / rect.height) * 8;
+        const ry = (dx / rect.width) * 8;
+        card.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateZ(8px)`;
+      });
+      hero.addEventListener('mouseleave', () => { card.style.transform = 'none'; });
+    })();
+
+    // --------------- Sparks particle system (canvas) (From File 1) ---------------
+    (function(){
+      const canvas = document.getElementById('sparkCanvas');
+      const heroMedia = document.getElementById('heroMedia');
+      if(!canvas || !heroMedia) return;
+
+      const ctx = canvas.getContext('2d');
+      let particles = [];
+      let w=0, h=0, dpr = Math.max(1, window.devicePixelRatio || 1);
+      let demoActive = false;
+      let autoEmitInterval = null;
+
+      function resize(){
+        const rect = heroMedia.getBoundingClientRect();
+        w = rect.width;
+        h = rect.height;
+        canvas.width = Math.round(w * dpr);
+        canvas.height = Math.round(h * dpr);
+        canvas.style.width = rect.width + 'px';
+        canvas.style.height = rect.height + 'px';
+        ctx.setTransform(dpr,0,0,dpr,0,0);
+        canvas.style.left = rect.left + 'px'; // Fix positioning
+        canvas.style.top = rect.top + 'px'; // Fix positioning
+      }
+      function random(min,max){ return Math.random()*(max-min)+min; }
+
+      class Particle {
+        constructor(x,y){
+          this.x = x;
+          this.y = y;
+          const angle = random(-Math.PI/2 - 0.6, -Math.PI/2 + 0.6);
+          const speed = random(2,9);
+          this.vx = Math.cos(angle) * speed;
+          this.vy = Math.sin(angle) * speed + random(-1,1);
+          this.size = random(1.2,3.6);
+          this.life = random(40,90);
+          this.age = 0;
+          this.h = random(20,45); // hue
+        }
+        update(){
+          this.age++;
+          this.vy += 0.25; // gravity-like pull (sparks fall)
+          this.x += this.vx;
+          this.y += this.vy;
+          this.vx *= 0.995;
+        }
+        draw(ctx){
+          const t = this.age / this.life;
+          const alpha = Math.max(0, 1 - t);
+          const glow = Math.max(0.05, 0.8 - t*0.8);
+          // core
+          ctx.beginPath();
+          ctx.fillStyle = `hsla(${this.h}, 100%, ${30 + t*40}%, ${alpha})`;
+          ctx.ellipse(this.x, this.y, this.size, this.size*0.6, 0, 0, Math.PI*2);
+          ctx.fill();
+          // subtle trail
+          ctx.beginPath();
+          ctx.fillStyle = `rgba(255, ${160 + Math.floor(60*t)}, 60, ${0.08 * glow})`;
+          ctx.ellipse(this.x - this.vx*0.8, this.y - this.vy*0.8, this.size*1.8, this.size*0.6, 0, 0, Math.PI*2);
+          ctx.fill();
+        }
+        isDead(){ return this.age > this.life || this.y > h + 30 || this.x < -30 || this.x > w + 30; }
+      }
+
+      function emit(x,y, count=12){
+        for(let i=0;i<count;i++){
+          particles.push(new Particle(x + random(-4,4), y + random(-2,2)));
+        }
+      }
+
+      function frame(){
+        ctx.clearRect(0,0,w,h);
+        if(demoActive){
+          const grd = ctx.createRadialGradient(w*0.75, h*0.35, 10, w*0.75, h*0.35, Math.max(w,h));
+          grd.addColorStop(0, 'rgba(255,210,140,0.06)');
+          grd.addColorStop(1, 'rgba(255,210,140,0)');
+          ctx.fillStyle = grd;
+          ctx.fillRect(0,0,w,h);
+        }
+
+        for(let i=particles.length -1; i>=0; i--){
+          const p = particles[i];
+          p.update();
+          p.draw(ctx);
+          if(p.isDead()) particles.splice(i,1);
+        }
+        requestAnimationFrame(frame);
+      }
+
+      function startAutoEmit(){
+        if(autoEmitInterval) clearInterval(autoEmitInterval);
+        autoEmitInterval = setInterval(()=>{
+          const rect = heroMedia.getBoundingClientRect();
+          const x = rect.width * (0.68 + Math.random()*0.12);
+          const y = rect.height * (0.38 + Math.random()*0.12);
+          emit(x,y, Math.floor(random(8,18)));
+        }, 260);
+      }
+      function stopAutoEmit(){
+        if(autoEmitInterval) { clearInterval(autoEmitInterval); autoEmitInterval = null; }
+      }
+
+      heroMedia.addEventListener('click', (e)=>{
+        const rect = heroMedia.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        emit(x,y, 18);
+      });
+
+      const demoBtn = document.getElementById('cardStartBtn');
+      const startBtnSmall = document.getElementById('startDemoBtn');
+      function toggleDemo(){
+        demoActive = !demoActive;
+        demoBtn.setAttribute('aria-pressed', demoActive);
+        demoBtn.textContent = demoActive ? 'Stop Weld' : 'Start Weld';
+        if(demoActive){ startAutoEmit(); } else { stopAutoEmit(); }
+      }
+      demoBtn.addEventListener('click', toggleDemo);
+      startBtnSmall.addEventListener('click', () => {
+        toggleDemo();
+        heroMedia.scrollIntoView({behavior:'smooth', block:'center'});
+      });
+
+      function onResize(){
+        resize();
+      }
+      window.addEventListener('resize', onResize);
+      setTimeout(()=>{ resize(); frame(); }, 60);
+
+      // Canvas positioning fix (from File 1)
+      function positionCanvas(){
+        const rect = heroMedia.getBoundingClientRect();
+        canvas.style.left = rect.left + 'px';
+        canvas.style.top = rect.top + 'px';
+      }
+      window.addEventListener('scroll', positionCanvas, {passive:true});
+      window.addEventListener('resize', positionCanvas);
+      setTimeout(positionCanvas, 100);
+    })();
+
+    // --------------- Accessibility: smooth scroll anchors (From File 1) ---------------
+    // This is needed for File 1's header links
+    (function(){
+      document.querySelectorAll('a[href^="#"]').forEach(a=>{
+        a.addEventListener('click', (e)=>{
+          const target = document.querySelector(a.getAttribute('href'));
+          if(target){ 
+            e.preventDefault(); 
+            target.scrollIntoView({behavior:'smooth'}); 
+
+            // Close File 1's mobile menu
+            const mobileMenu = document.getElementById('mobileMenu');
+            if(mobileMenu && !mobileMenu.classList.contains('hidden')){
+                mobileMenu.classList.add('hidden');
+            }
+          }
+        });
+      });
+    })();
+
+    // --------------- SCRIPTS from File 2 (for content sections) ---------------
+
+    // Create particles (for content sections)
+    function createParticles(containerId, count = 30) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        
+        container.innerHTML = ''; // Clear existing
+        
+        for (let i = 0; i < count; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 20 + 's';
+            particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+            container.appendChild(particle);
+        }
+    }
+    
+    // Note: 'particles' ID is in the File 1 hero, which doesn't use this.
+    // This will correctly target 'particles2' and 'particles3' in File 2's content.
+    createParticles('particles2', 25);
+    createParticles('particles3', 25);
+    
+    // Scroll reveal animation
+    function reveal() {
+        const reveals = document.querySelectorAll('.reveal');
+        
+        for (let i = 0; i < reveals.length; i++) {
+            const windowHeight = window.innerHeight;
+            const elementTop = reveals[i].getBoundingClientRect().top;
+            const elementVisible = 100; // Reduced for quicker reveals
+            
+            if (elementTop < windowHeight - elementVisible) {
+                reveals[i].classList.add('active');
+            }
+        }
+    }
+    
+    window.addEventListener('scroll', reveal);
+    document.addEventListener('DOMContentLoaded', reveal); // Initial check
+    
+    // Animate stats counter (for File 2's stat bar, which is now removed, but safe to keep)
+    function animateCounter(element) {
+        const target = parseInt(element.getAttribute('data-target'));
+        if (isNaN(target)) return;
+        
+        const duration = 2000;
+        let startTime = null;
+        
+        function step(timestamp) {
+            if (!startTime) startTime = timestamp;
+            const progress = Math.min((timestamp - startTime) / duration, 1);
+            element.textContent = Math.floor(progress * target);
+            if (progress < 1) {
+                window.requestAnimationFrame(step);
+            }
+        }
+        
+        window.requestAnimationFrame(step);
+    }
+    
+    const statObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting && entry.target.textContent === '0') {
+                animateCounter(entry.target);
+                observer.unobserve(entry.target); // Animate only once
+            }
+        });
+    }, { threshold: 0.5 });
+    
+    document.querySelectorAll('.stat-number').forEach(stat => {
+        statObserver.observe(stat);
+    });
+    
+    // FAQ toggle
+    function toggleFAQ(button) {
+        const answer = button.nextElementSibling;
+        const icon = button.querySelector('svg');
+        
+        answer.classList.toggle('hidden');
+        icon.classList.toggle('rotate-180');
+    }
+    
+    // Form submission
+    function handleSubmit(event) {
+        event.preventDefault();
+        const button = event.target.querySelector('button[type="submit"]');
+        const originalText = button.textContent;
+        
+        button.textContent = 'Sending...';
+        button.disabled = true;
+        
+        setTimeout(() => {
+            button.textContent = '✓ Request Sent!';
+            button.classList.remove('bg-brand-blue', 'hover:bg-brand-blue-dark');
+            button.classList.add('bg-green-500');
+            
+            setTimeout(() => {
+                button.textContent = originalText;
+                button.disabled = false;
+                button.classList.remove('bg-green-500');
+                button.classList.add('bg-brand-blue', 'hover:bg-brand-blue-dark');
+                event.target.reset();
+            }, 3000);
+        }, 1500);
+    }
+  </script>
+</body>
+</html>
