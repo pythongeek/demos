@@ -3,714 +3,548 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VRweld - Immersive Trade Microlearning</title>
+    <title>VRWeld | Next-Gen Technical Education</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
     <style>
-        /* RESET */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
+        /* --- 1. CORE VARIABLES & RESET --- */
         :root {
-            /* VIBRANT PALETTE */
-            --primary: #FF2E93;   /* Hot Pink */
-            --secondary: #00F0FF; /* Cyan */
-            --accent: #FFD600;    /* Electric Yellow */
-            --violet: #7000FF;    /* Deep Violet */
+            --bg-white: #ffffff;
+            --text-main: #1a202c;
+            --text-light: #4a5568;
             
-            --bg-deep: #05011a;   /* Almost black purple */
-            --glass: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.15);
-            --text-main: #FFFFFF;
-            --text-muted: #E0E0FF;
+            /* Vibrant Palette */
+            --color-yellow: #FFD93D;
+            --color-pink: #FF6B6B;
+            --color-purple: #6C5CE7;
+            --color-cyan: #00D2D3;
+            --color-blue: #0984E3;
+            
+            /* Gradients */
+            --gradient-text: linear-gradient(135deg, #6C5CE7 0%, #FF6B6B 100%);
+            
+            /* Glassmorphism */
+            --glass-bg: rgba(255, 255, 255, 0.65);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.5);
+            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+            
+            --font-main: 'Outfit', sans-serif;
+            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after { animation: none !important; transition: none !important; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html, body {
+            width: 100%;
+            overflow-x: hidden; /* Critical for preventing horizontal scroll */
         }
 
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--bg-deep);
+            background-color: var(--bg-white);
             color: var(--text-main);
-            font-size: 16px;
+            font-family: var(--font-main);
             line-height: 1.6;
-            overflow-x: hidden;
-            min-height: 100vh;
         }
 
-        /* VIBRANT ANIMATED BACKGROUND */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: 
-                radial-gradient(circle at 10% 20%, rgba(112, 0, 255, 0.4) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(255, 46, 147, 0.3) 0%, transparent 40%),
-                radial-gradient(circle at 50% 50%, rgba(0, 240, 255, 0.15) 0%, transparent 60%);
-            z-index: -2;
-            filter: blur(60px);
-        }
+        img, iframe { max-width: 100%; display: block; }
 
-        /* GRID PATTERN OVERLAY */
-        body::after {
-            content: '';
+        /* --- 2. BACKGROUND ANIMATION (Optimized) --- */
+        .background-mesh {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-image: 
-                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-            background-size: 50px 50px;
+            top: 0; left: 0; width: 100%; height: 100vh;
             z-index: -1;
-            pointer-events: none;
+            overflow: hidden;
+            background: #fff;
+        }
+        
+        .blob {
+            position: absolute;
+            filter: blur(90px);
+            opacity: 0.5;
+            border-radius: 50%;
+            animation: float 15s infinite ease-in-out;
+            will-change: transform; /* Performance booster */
+        }
+        
+        .b1 { width: 60vw; height: 60vw; background: var(--color-yellow); top: -20%; left: -10%; animation-delay: 0s; }
+        .b2 { width: 50vw; height: 50vw; background: var(--color-cyan); bottom: -10%; right: -10%; animation-delay: 2s; }
+        .b3 { width: 40vw; height: 40vw; background: var(--color-pink); top: 40%; left: 50%; transform: translate(-50%, -50%); opacity: 0.3; animation-delay: 4s; }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
         }
 
-        /* Header */
-        header {
-            position: sticky;
-            top: 20px;
-            z-index: 1000;
-            width: 90%;
-            max-width: 1200px;
-            margin: 0 auto;
-            background: rgba(5, 1, 26, 0.6);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 100px; /* Pill shape header */
-            padding: 12px 32px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-        }
-
-        .header-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 26px;
-            font-weight: 900;
-            letter-spacing: -1px;
-            background: linear-gradient(135deg, #FFF, var(--secondary));
+        /* --- 3. TYPOGRAPHY --- */
+        h1, h2, h3 { font-weight: 800; line-height: 1.1; letter-spacing: -0.02em; }
+        
+        h1 { 
+            font-size: clamp(3rem, 8vw, 5.5rem); 
+            background: var(--gradient-text);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
+            margin-bottom: 1.5rem;
         }
+        
+        h2 { font-size: clamp(2.25rem, 5vw, 3.5rem); margin-bottom: 1rem; color: var(--text-main); }
+        h3 { font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--text-main); }
+        p { font-size: 1.125rem; color: var(--text-light); max-width: 60ch; margin-bottom: 1.5rem; }
 
-        nav { display: flex; gap: 32px; align-items: center; }
-        nav a { 
-            color: var(--text-muted); 
-            text-decoration: none; 
-            font-weight: 600; 
-            font-size: 14px; 
-            transition: all 0.3s;
-            position: relative;
-        }
-        nav a:hover { color: var(--secondary); text-shadow: 0 0 10px var(--secondary); }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; width: 100%; }
+        .text-center { text-align: center; display: flex; flex-direction: column; align-items: center; }
 
-        /* VIBRANT GRADIENT BUTTON */
-        .cta-button {
-            background: linear-gradient(90deg, var(--primary), var(--violet));
-            color: white;
-            padding: 14px 32px;
+        /* --- 4. BUTTONS --- */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem 2.5rem;
             border-radius: 50px;
             font-weight: 700;
             text-decoration: none;
-            transition: all 0.3s ease;
+            transition: var(--transition);
+            cursor: pointer;
+            font-size: 1.1rem;
             border: none;
-            font-size: 15px;
-            display: inline-block;
-            position: relative;
-            z-index: 1;
-            box-shadow: 0 0 20px rgba(255, 46, 147, 0.4);
         }
 
-        .cta-button::before {
-            content: '';
-            position: absolute; top: 2px; left: 2px; right: 2px; bottom: 2px;
-            background: #000;
-            border-radius: 48px;
-            z-index: -1;
-            opacity: 0;
-            transition: opacity 0.3s;
+        .btn-primary {
+            background: var(--text-main);
+            color: #fff;
+            box-shadow: 0 10px 25px rgba(45, 55, 72, 0.2);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            background: var(--color-purple);
+            box-shadow: 0 15px 35px rgba(108, 92, 231, 0.4);
         }
 
-        .cta-button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 30px rgba(255, 46, 147, 0.6);
+        .btn-secondary {
+            background: rgba(255,255,255,0.8);
+            color: var(--text-main);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            backdrop-filter: blur(10px);
+        }
+        .btn-secondary:hover {
+            background: #fff;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
         }
 
-        .cta-secondary {
-            background: transparent;
-            border: 2px solid var(--secondary);
-            box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
-        }
-        .cta-secondary:hover {
-            background: var(--secondary);
-            color: #000;
-            box-shadow: 0 0 30px rgba(0, 240, 255, 0.6);
-        }
+        /* --- 5. SECTIONS & LAYOUT --- */
+        section { padding: 6rem 0; position: relative; }
 
-        /* CENTERED HERO */
-        .hero {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 120px 24px 80px;
-            text-align: center;
-            position: relative;
-        }
-
-        .hero h1 {
-            font-size: 72px;
-            font-weight: 800;
-            line-height: 1.1;
-            margin-bottom: 32px;
-            background: linear-gradient(to right, #fff, var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 30px rgba(0, 240, 255, 0.3));
-        }
-
-        .hero-subhead { 
-            font-size: 22px; 
-            color: var(--text-muted); 
-            margin: 0 auto 48px; 
-            line-height: 1.6; 
-            max-width: 700px;
-        }
-
-        .hero-cta-group { 
-            display: flex; 
-            gap: 20px; 
-            justify-content: center;
-            margin-bottom: 60px; 
-            flex-wrap: wrap; 
-        }
-
-        .trust-line {
-            display: inline-flex;
+        .split-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
             align-items: center;
-            gap: 12px;
-            color: var(--accent);
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-size: 14px;
-            background: rgba(255, 214, 0, 0.1);
-            padding: 8px 20px;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 214, 0, 0.3);
-            margin-top: 30px;
         }
+        
+        .split-grid.reversed { direction: rtl; }
+        .split-grid.reversed .text-content { direction: ltr; }
 
-        .hero-media-wrapper {
-            position: relative;
-            margin-top: 60px;
+        /* --- 6. GLASS CARDS --- */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: var(--glass-border);
             border-radius: 24px;
-            padding: 10px; /* Creates spacing for border */
-            background: linear-gradient(135deg, var(--secondary), var(--primary));
-            box-shadow: 0 20px 80px rgba(112, 0, 255, 0.5);
+            padding: 2.5rem;
+            box-shadow: var(--glass-shadow);
+            transition: var(--transition);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
         }
 
-        .hero-media {
+        .glass-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(108, 92, 231, 0.15);
+            background: rgba(255,255,255, 0.9);
+        }
+
+        /* --- 7. MEDIA WRAPPERS --- */
+        .media-wrapper {
+            position: relative;
+            border-radius: 24px;
+            overflow: hidden;
+            background: #000; /* Fallback */
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+            border: 4px solid #fff;
+            transform: rotate(-1deg);
+            transition: var(--transition);
+            width: 100%;
+        }
+        
+        .media-wrapper:hover { transform: rotate(0deg) scale(1.02); }
+        
+        .responsive-iframe {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.11%; /* 16:9 Aspect Ratio */
+        }
+        
+        .responsive-iframe iframe {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+        }
+
+        /* --- 8. HERO SPECIFICS --- */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding-top: 80px; /* To account for eventual fixed header */
+        }
+
+        .hero-visual-card {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .hero-visual-card img {
+            width: 100%;
+            border-radius: 32px;
+            box-shadow: 0 40px 80px -20px rgba(0,0,0,0.2);
+            transform: rotate(2deg);
+            border: 8px solid #fff;
+            transition: var(--transition);
+        }
+        
+        .hero-visual-card:hover img { transform: rotate(0deg); }
+
+        .hero-badge {
+            position: absolute;
+            bottom: 40px; left: -20px;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem 2rem;
             border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            animation: floatBadge 6s infinite ease-in-out;
+            border: 1px solid rgba(255,255,255,1);
+        }
+        
+        @keyframes floatBadge {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .hero-badge strong { font-size: 2rem; color: var(--color-purple); display: block; line-height: 1; font-weight: 800; }
+        .hero-badge span { font-size: 0.85rem; font-weight: 700; color: var(--text-light); text-transform: uppercase; letter-spacing: 1px; }
+
+        /* --- 9. GRID SYSTEMS --- */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+            margin-top: 4rem;
+            width: 100%;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+            width: 100%;
+        }
+
+        /* Icons */
+        .icon-circle {
+            width: 64px; height: 64px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.75rem;
+            margin-bottom: 1.5rem;
+            color: #fff;
+            flex-shrink: 0;
+        }
+        .icon-blue { background: var(--color-blue); box-shadow: 0 10px 20px rgba(9, 132, 227, 0.3); }
+        .icon-pink { background: var(--color-pink); box-shadow: 0 10px 20px rgba(255, 107, 107, 0.3); }
+        .icon-yellow { background: var(--color-yellow); box-shadow: 0 10px 20px rgba(255, 217, 61, 0.3); }
+
+        /* --- 10. VERTICAL STORY --- */
+        .vertical-frame {
+            max-width: 320px;
+            margin: 0 auto;
+            border-radius: 32px;
+            border: 8px solid #fff;
+            box-shadow: 0 40px 80px -20px rgba(0,0,0,0.25);
             overflow: hidden;
             background: #000;
-            aspect-ratio: 16/9;
-            position: relative;
-        }
-        
-        .hero-media iframe { width: 100%; height: 100%; border: none; }
-
-        /* SECTION STYLING */
-        section { padding: 100px 0; }
-
-        /* Story Strip - Holographic Cards */
-        .story-container { max-width: 1300px; margin: 0 auto; padding: 0 24px; }
-        .story-header { text-align: center; max-width: 800px; margin: 0 auto 64px; }
-        
-        .section-tag {
-            color: var(--secondary);
-            font-weight: 700;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            font-size: 14px;
-            margin-bottom: 16px;
-            display: block;
         }
 
-        .story-title { font-size: 48px; font-weight: 800; margin-bottom: 16px; }
-        
-        .story-tiles { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-            gap: 32px; 
+        /* --- 11. PRICING CARDS --- */
+        .price-tag { font-size: 3rem; font-weight: 800; margin: 1rem 0; color: var(--text-main); }
+        .price-tag span { font-size: 1rem; font-weight: 500; color: var(--text-light); }
+        .feature-list { list-style: none; margin: 1.5rem 0; width: 100%; }
+        .feature-list li { padding: 0.5rem 0; border-bottom: 1px solid rgba(0,0,0,0.05); color: var(--text-light); display: flex; align-items: center; }
+        .feature-list li::before { content: "✓"; color: var(--color-cyan); font-weight: bold; margin-right: 10px; }
+
+        .featured-card { 
+            border: 2px solid var(--color-purple); 
+            transform: scale(1.05); 
+            z-index: 2; 
+            background: #fff;
         }
 
-        .story-tile {
-            background: rgba(10, 5, 40, 0.7); 
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.4s ease;
-            position: relative;
-        }
-
-        .story-tile:hover { 
-            transform: translateY(-10px); 
-            border-color: var(--primary); 
-            box-shadow: 0 0 40px rgba(255, 46, 147, 0.3); 
-        }
-
-        .tile-media { width: 100%; aspect-ratio: 16/9; background: #000; }
-        
-        .tile-content { padding: 32px; }
-        
-        .tile-number {
-            font-size: 60px;
-            font-weight: 900;
-            color: rgba(255, 255, 255, 0.05);
-            position: absolute;
-            top: 10px;
-            right: 20px;
-            line-height: 1;
-        }
-
-        .tile-caption { font-size: 24px; font-weight: 700; margin-bottom: 12px; color: var(--secondary); }
-        .tile-description { font-size: 16px; color: var(--text-muted); }
-
-        /* Benefits - Floating Orbs */
-        .benefits-grid { 
-            max-width: 1200px; 
-            margin: 0 auto; 
-            padding: 0 24px; 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
-            gap: 40px; 
-        }
-        
-        .benefit-card { 
-            padding: 40px; 
-            background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
-            border-radius: 30px; 
-            border: 1px solid rgba(255, 255, 255, 0.1); 
-            text-align: center;
-            transition: 0.3s;
-        }
-        
-        .benefit-card:hover { border-color: var(--accent); transform: scale(1.03); }
-
-        .benefit-icon { 
-            font-size: 40px; 
-            margin-bottom: 24px; 
-            background: var(--bg-deep);
-            width: 80px; height: 80px;
-            display: flex; align-items: center; justify-content: center;
-            border-radius: 50%;
-            margin-left: auto; margin-right: auto;
-            border: 2px solid var(--accent);
-            box-shadow: 0 0 20px rgba(255, 214, 0, 0.4);
-        }
-        
-        .benefit-card h3 { font-size: 24px; font-weight: 700; margin-bottom: 12px; }
-
-        /* Showcase - Side by Side */
-        .showcase { background: rgba(0,0,0,0.3); }
-        .showcase-container { 
-            max-width: 1200px; margin: 0 auto; padding: 0 24px; 
-            display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; 
-        }
-        .showcase-media { 
-            border-radius: 24px; overflow: hidden; 
-            box-shadow: -20px 20px 0px var(--secondary); 
-            aspect-ratio: 9/16; border: 2px solid #fff;
-        }
-        .showcase-media iframe { width: 100%; height: 100%; border: none; }
-        
-        .showcase h2 { 
-            font-size: 48px; font-weight: 800; margin-bottom: 24px; 
-            background: linear-gradient(90deg, #FFF, var(--primary));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
-
-        .metric-item { 
-            display: flex; align-items: center; gap: 24px; 
-            margin-bottom: 24px;
-            padding: 24px; 
-            background: linear-gradient(90deg, rgba(112, 0, 255, 0.2), transparent);
-            border-left: 4px solid var(--primary);
-            border-radius: 0 12px 12px 0;
-        }
-        .metric-value { font-size: 42px; font-weight: 800; color: var(--primary); line-height: 1; }
-        .metric-label { font-size: 16px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
-
-        /* Curriculum - Masonry Grid Style */
-        .curriculum-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); 
-            gap: 24px; 
-            margin-bottom: 80px; 
-            max-width: 1200px; margin-left: auto; margin-right: auto; padding: 0 24px;
-        }
-        
-        .curriculum-card { 
-            background: #0f0a24; 
-            padding: 40px; 
-            border-radius: 24px; 
-            border: 1px solid rgba(255, 255, 255, 0.1); 
-            transition: all 0.3s; 
-        }
-        
-        .curriculum-card:hover { 
-            background: #181033;
-            border-color: var(--secondary); 
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-        }
-        
-        .curriculum-icon { 
-            color: var(--secondary); margin-bottom: 20px; 
-            filter: drop-shadow(0 0 8px var(--secondary));
-        }
-        
-        .meta-tag { 
-            background: rgba(255, 255, 255, 0.1); 
-            color: white; 
-            padding: 6px 14px; 
-            border-radius: 4px; 
-            font-size: 12px; font-weight: 700; 
-            text-transform: uppercase;
-        }
-
-        /* Lead Form - Neon Card */
-        .lead-form { max-width: 600px; margin: 100px auto; padding: 0 24px; }
-        
-        .form-card { 
-            background: rgba(15, 10, 40, 0.9); 
-            padding: 48px; 
-            border-radius: 32px; 
-            box-shadow: 0 0 50px rgba(112, 0, 255, 0.3); 
-            border: 1px solid var(--violet);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .form-card::before {
-            content: '';
-            position: absolute; top: 0; left: 0; width: 100%; height: 6px;
-            background: linear-gradient(90deg, var(--secondary), var(--primary), var(--accent));
-        }
-
-        .form-card h2 { 
-            font-size: 32px; font-weight: 800; margin-bottom: 32px; text-align: center; 
-        }
-        
-        .form-group label { display: block; margin-bottom: 10px; font-weight: 600; color: var(--secondary); font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
-        
-        .form-group input, .form-group select { 
-            width: 100%; padding: 16px; 
-            background: rgba(0,0,0,0.4);
-            border: 2px solid rgba(255,255,255,0.1);
-            border-radius: 12px; 
-            color: white; font-size: 16px; 
-        }
-        
-        .form-group input:focus, .form-group select:focus { 
-            outline: none; border-color: var(--primary); 
-            box-shadow: 0 0 15px rgba(255, 46, 147, 0.3);
-        }
-
-        .success-message { 
-            display: none; 
-            background: rgba(0, 240, 255, 0.2); 
-            color: var(--secondary); 
-            padding: 16px; border-radius: 12px; 
-            text-align: center; font-weight: 700; margin-top: 24px; 
-            border: 1px solid var(--secondary);
-        }
-        .success-message.show { display: block; }
-
-        /* Footer */
-        footer { 
-            background: #000; 
-            color: #666; 
-            padding: 60px 24px; 
-            text-align: center; 
-            border-top: 1px solid #222; 
-        }
-        footer a { color: var(--secondary); text-decoration: none; }
-
-        .mobile-menu-toggle { display: none; background: transparent; border: none; font-size: 30px; cursor: pointer; color: white; }
-
-        /* Responsive */
+        /* --- 12. RESPONSIVE BREAKPOINTS --- */
         @media (max-width: 968px) {
-            .hero h1 { font-size: 42px; }
-            .showcase-container { grid-template-columns: 1fr; }
-            nav { display: none; }
-            .mobile-menu-toggle { display: block; }
-            .header-container { padding: 0 16px; }
-            .curriculum-grid { grid-template-columns: 1fr; }
+            h1 { font-size: 3rem; }
+            h2 { font-size: 2.5rem; }
+            
+            .split-grid, .split-grid.reversed { 
+                grid-template-columns: 1fr; 
+                gap: 3rem; 
+                direction: ltr !important; /* Force alignment on mobile */
+            }
+            
+            .hero { 
+                flex-direction: column; 
+                padding-top: 4rem; 
+                padding-bottom: 4rem;
+                text-align: center; 
+            }
+            
+            .hero-visual-card { margin-top: 3rem; width: 100%; max-width: 500px; margin-left: auto; margin-right: auto; }
+            .hero-badge { left: 50%; transform: translateX(-50%); bottom: -25px; width: max-content; }
+            
+            .featured-card { transform: scale(1); }
+            
+            .btn { width: 100%; } /* Full width buttons on mobile */
+        }
+
+        @media (max-width: 480px) {
+            .container { padding: 0 1.5rem; }
+            h1 { font-size: 2.5rem; }
+            .section { padding: 4rem 0; }
+        }
+
+        /* --- 13. ANIMATION CLASSES --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: var(--transition);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="header-container">
-            <div class="logo">VRweld</div>
-            <nav aria-label="Main navigation">
-                <a href="#demo">Demo</a>
-                <a href="#curriculum">Curriculum</a>
-                <a href="#instructor-pack">Instructor Pack</a>
-            </nav>
-            <button class="mobile-menu-toggle" aria-label="Toggle menu">☰</button>
-            <a href="#demo" class="cta-button">Request demo</a>
-        </div>
-    </header>
-
-<section class="hero">
-    <div class="hero-content">
-        <h1>Learn by doing, <br>not just watching.</h1>
-        <p class="hero-subhead">Ignite student potential with short, assessment-driven micro-lessons that build classroom-ready trade skills using immersive technology.</p>
-        
-        <div class="hero-cta-group">
-            <a href="#demo" class="cta-button">Start Classroom Demo</a>
-            <a href="#instructor-pack" class="cta-button cta-secondary">Get Instructor Pack</a>
-        </div>
-        
-        <div class="hero-media-wrapper">
-            <div class="hero-media">
-                <iframe src="https://imgflip.com/embed/ad7l7x" loading="lazy" title="VRweld precision welding demo" allowfullscreen></iframe>
-            </div>
-        </div>
-        
-        <div class="trust-line">⚡ Classroom-ready • 30-minute setup ⚡</div>
+    <div class="background-mesh">
+        <div class="blob b1"></div>
+        <div class="blob b2"></div>
+        <div class="blob b3"></div>
     </div>
-</section>
 
-<section class="story-strip">
-    <div class="story-container">
-        <div class="story-header">
-            <span class="section-tag">Training Modules</span>
-            <h2 class="story-title">From fundamentals to mastery</h2>
-            <p class="hero-subhead">Progressive skill-building with real-time assessment</p>
-        </div>
-        
-        <div class="story-tiles">
-            <div class="story-tile">
-                <div class="tile-media">
-                    <iframe src="https://imgflip.com/embed/ad7lhf" loading="lazy" title="Arc behavior technique" allowfullscreen></iframe>
-                </div>
-                <div class="tile-content">
-                    <div class="tile-number">01</div>
-                    <h3 class="tile-caption">Arc Control</h3>
-                    <p class="tile-description">Master arc length and stability with real-time technique feedback visualizers.</p>
+    <section class="hero">
+        <div class="container split-grid">
+            <div class="text-content reveal">
+                <h1>Master Trades. <br>Zero Risk.</h1>
+                <p>The vibrant, multi-trade VR lab for modern High Schools. Transform classrooms into safe job sites for Welding, HVAC, and Engineering Tech.</p>
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <a href="#blueprint" class="btn btn-primary">Explore Curriculum</a>
+                    <a href="#pricing" class="btn btn-secondary">View Pricing</a>
                 </div>
             </div>
-
-            <div class="story-tile">
-                <div class="tile-media">
-                    <iframe src="https://imgflip.com/embed/ad7lkw" loading="lazy" title="Bead formation" allowfullscreen></iframe>
-                </div>
-                <div class="tile-content">
-                    <div class="tile-number">02</div>
-                    <h3 class="tile-caption">Precision Beads</h3>
-                    <p class="tile-description">Develop consistent dime-stack patterns across multiple positions instantly.</p>
-                </div>
-            </div>
-
-            <div class="story-tile">
-                <div class="tile-media">
-                    <iframe src="https://imgflip.com/embed/ad7lmv" loading="lazy" title="Safety and PPE assessment" allowfullscreen></iframe>
-                </div>
-                <div class="tile-content">
-                    <div class="tile-number">03</div>
-                    <h3 class="tile-caption">Safety & Compliance</h3>
-                    <p class="tile-description">Interactive PPE training with knowledge verification assessments.</p>
+            <div class="hero-visual-card reveal">
+                <img src="image (1).jpeg" alt="Student in VR Headset learning trade skills">
+                <div class="hero-badge">
+                    <strong>100%</strong>
+                    <span>Safe Practice</span>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<section class="benefits">
-    <div class="benefits-grid">
-        <div class="benefit-card">
-            <div class="benefit-icon">⚡</div>
-            <h3>Real feedback</h3>
-            <p>Instant visual cues on angle, speed, distance — students know exactly what to improve instantly.</p>
+    <section>
+        <div class="container split-grid reversed">
+            <div class="text-content reveal">
+                <h2 style="color: var(--color-purple);">Step Into the Booth.</h2>
+                <p>Give every student their own industrial station. No fumes, no burns, no consumable costs. Just pure, uninterrupted arc time.</p>
+                <p style="font-weight: 700; color: var(--text-main);">Turn your classroom into a job site instantly.</p>
+            </div>
+            <div class="visual-content reveal">
+                <div class="media-wrapper">
+                    <div class="responsive-iframe">
+                        <iframe frameBorder="0" src="https://imgflip.com/embed/ad7l7x" title="VR Immersion Demo"></iframe>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="benefit-card">
-            <div class="benefit-icon">📚</div>
-            <h3>Classroom-ready</h3>
-            <p>Drop-in lessons with quizzes, badges, and progression tracking — no complex prep required.</p>
-        </div>
-        <div class="benefit-card">
-            <div class="benefit-icon">📊</div>
-            <h3>Proven Progression</h3>
-            <p>Unlock challenges and track mastery across 23 joint types and all welding positions.</p>
-        </div>
-    </div>
-</section>
+    </section>
 
-<section class="showcase" id="showcase">
-    <div class="showcase-container">
-        <div class="showcase-content">
-            <span class="section-tag">Results</span>
-            <h2>Real projects, <br>Real results.</h2>
-            <p class="hero-subhead">Students progress from virtual practice to physical shop work with confidence and measurable skill gains.</p>
+    <section>
+        <div class="container text-center reveal">
+            <h2 style="color: var(--color-blue);">Physics That Feel Real.</h2>
+            <p>We don't just simulate visuals; we simulate the work. From puddles to pressures, students build muscle memory that transfers directly to the shop floor.</p>
             
-            <div class="metrics">
-                <div class="metric-item">
-                    <div class="metric-value">23</div>
-                    <div class="metric-label">Unique joint types</div>
-                </div>
-                <div class="metric-item">
-                    <div class="metric-value">4</div>
-                    <div class="metric-label">Mastered positions</div>
+            <div class="media-wrapper" style="width: 100%; max-width: 800px; margin-top: 3rem; transform: rotate(0deg);">
+                <div class="responsive-iframe">
+                    <iframe frameBorder="0" src="https://imgflip.com/embed/ad7lhf" title="VR Physics Demo"></iframe>
                 </div>
             </div>
         </div>
-        <div class="showcase-media">
-            <iframe src="https://imgflip.com/embed/ad7kzj" loading="lazy" title="Student project showcase" allowfullscreen></iframe>
-        </div>
-    </div>
-</section>
+    </section>
 
-<section class="curriculum-overview" id="curriculum">
-    <div class="story-header">
-        <span class="section-tag">The Syllabus</span>
-        <h2 class="story-title">Comprehensive Curriculum</h2>
-    </div>
+    <section id="blueprint">
+        <div class="container">
+            <div class="text-center reveal">
+                <h2 style="color: var(--color-pink);">Blueprint & AR Mastery.</h2>
+                <p>Interactive 3D learning with orthographic views, BOM charts, and AR visualization.</p>
+            </div>
 
-    <div class="curriculum-grid">
-        <div class="curriculum-card">
-            <div class="curriculum-icon">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-            </div>
-            <h3>21+ Joint Configurations</h3>
-            <p style="color: #bbb;">Master groove, fillet, and pipe joints across all welding positions—flat, horizontal, vertical, and overhead.</p>
-            <div class="curriculum-meta">
-                <span class="meta-tag">15 Groove</span>
-                <span class="meta-tag">5 Fillet</span>
-            </div>
-        </div>
+            <div class="feature-grid">
+                <div class="glass-card reveal">
+                    <div class="icon-circle icon-blue">🏗️</div>
+                    <h3>9 Pro Models</h3>
+                    <p>Includes Plates, Brackets, Poles, Steel Beams, and Arch Truss Bridges. Students visualize complex structures before welding.</p>
+                </div>
 
-        <div class="curriculum-card">
-            <div class="curriculum-icon">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-            </div>
-            <h3>Real-Time Performance</h3>
-            <p style="color: #bbb;">Students receive instant feedback on travel angle, work angle, contact tip distance, and welding speed.</p>
-            <div class="curriculum-meta">
-                <span class="meta-tag">Live Data</span>
+                <div class="glass-card reveal">
+                    <div class="icon-circle icon-pink">👓</div>
+                    <h3>AR Visualization</h3>
+                    <p>3D models pop out of 2D blueprints like a puzzle piece. Synchronized Top, Front, and Side views for spatial understanding.</p>
+                </div>
+
+                <div class="glass-card reveal">
+                    <div class="icon-circle icon-yellow">📋</div>
+                    <h3>BOM Charts</h3>
+                    <p>Bill of Materials integration. Students learn to read size specifications, material details, and welding symbols.</p>
+                </div>
             </div>
         </div>
+    </section>
 
-        <div class="curriculum-card">
-            <div class="curriculum-icon">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <section>
+        <div class="container split-grid">
+            <div class="text-content reveal">
+                <h2 style="color: var(--color-cyan);">Master the Craft.</h2>
+                <p>Whether it's laying the perfect bead or wiring a PLC panel, precision is key. Our engine tracks hand stability, speed, and angles in real-time.</p>
             </div>
-            <h3>Assessment & Progression</h3>
-            <p style="color: #bbb;">Built-in quizzes award gold, silver, and bronze badges—track student mastery with clear performance data.</p>
-            <div class="curriculum-meta">
-                <span class="meta-tag">Gamified</span>
+            <div class="visual-content reveal">
+                <div class="media-wrapper">
+                    <div class="responsive-iframe">
+                        <iframe frameBorder="0" src="https://imgflip.com/embed/ad7lkw" title="Precision Tracking Demo"></iframe>
+                    </div>
+                </div>
             </div>
         </div>
-        
-        <div class="curriculum-card">
-            <div class="curriculum-icon">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-            </div>
-            <h3>Realistic Physics</h3>
-            <p style="color: #bbb;">Dynamic arc behavior, puddle dynamics, bead formation, and spark simulation create true-to-life experiences.</p>
-            <div class="curriculum-meta">
-                <span class="meta-tag">Physics Engine</span>
-            </div>
-        </div>
-    </div>
-</section>
+    </section>
 
-<section class="instructor-pack" id="instructor-pack">
-    <div class="form-card" style="text-align: center; max-width: 800px; margin: 0 auto;">
-        <h2>Complete Instructor Resources</h2>
-        <p class="hero-subhead">Everything you need to run immersive welding lessons.</p>
-        
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; text-align: center; justify-content: center; margin-bottom: 30px;">
-            <div style="color: var(--secondary);">✓ 23 joint types</div>
-            <div style="color: var(--secondary);">✓ Interactive lessons</div>
-            <div style="color: var(--secondary);">✓ Quiz system</div>
-            <div style="color: var(--secondary);">✓ Blueprint games</div>
-        </div>
-        
-        <a href="#" class="cta-button">Download Pack</a>
-    </div>
-</section>
-
-<section class="lead-form" id="demo">
-    <div class="form-card">
-        <h2>Request Demo</h2>
-        <form id="demoForm" name="contact" method="POST" data-netlify="true">
-            <input type="hidden" name="form-name" value="contact" />
+    <section>
+        <div class="container text-center reveal">
+            <h2 style="color: var(--color-purple);">Gamified Growth.</h2>
+            <p>Instant grading. No waiting for the instructor. Students see their score, correct mistakes, and try again immediately.</p>
             
-            <div class="form-group">
-                <label for="email">School email</label>
-                <input type="email" id="email" name="email" required placeholder="name@school.edu">
+            <div class="media-wrapper" style="width: 100%; max-width: 800px; margin-top: 3rem; border-color: var(--color-yellow);">
+                <div class="responsive-iframe">
+                    <iframe frameBorder="0" src="https://imgflip.com/embed/ad7lmv" title="Feedback Loop Demo"></iframe>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="role">Role</label>
-                <select id="role" name="role" required>
-                    <option value="">Select your role</option>
-                    <option value="instructor">Instructor</option>
-                    <option value="admin">Administrator</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="zip">Zip code</label>
-                <input type="text" id="zip" name="zip" required placeholder="12345">
-            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="container text-center reveal">
+            <h2>From VR to Hired.</h2>
+            <p>This isn't a game. It's career prep. See how PTTI students transition from virtual labs to real-world job sites.</p>
             
-            <button type="submit" class="cta-button" style="width: 100%; margin-top: 10px;">Submit Request</button>
-            <div class="success-message" id="successMessage">
-                ✨ Request received! We'll contact you within 24 hours.
+            <div style="margin-top: 3rem;">
+                <div class="vertical-frame">
+                    <div style="position: relative; width: 100%; height: 0; padding-bottom: 177.69%;">
+                        <iframe src="https://imgflip.com/embed/ad7kzj" style="position:absolute; top:0; left:0; width:100%; height:100%;" frameborder="0" title="Student Success Story"></iframe>
+                    </div>
+                </div>
             </div>
-        </form>
-    </div>
-</section>
+        </div>
+    </section>
 
-<footer>
-    <p>&copy; 2024 VRweld. <a href="#">Privacy Policy</a></p>
-</footer>
+    <section id="pricing">
+        <div class="container">
+            <div class="text-center reveal">
+                <h2 style="color: var(--color-blue);">Equip Your School.</h2>
+                <p>Simple, scalable pricing for any size program.</p>
+            </div>
 
-<script>
-    // Netlify Form Handling
-    document.getElementById('demoForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const myForm = e.target;
-        const formData = new FormData(myForm);
-        
-        fetch("/", {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: new URLSearchParams(formData).toString()
-        })
-        .then(() => {
-            document.getElementById('successMessage').classList.add('show');
-            myForm.reset();
-        })
-        .catch((error) => alert("Submission failed. Please try again."));
-    });
+            <div class="pricing-grid">
+                <div class="glass-card reveal">
+                    <h3>Starter</h3>
+                    <div class="price-tag">$70 <span>/mo/seat</span></div>
+                    <ul class="feature-list">
+                        <li>1-5 Headsets</li>
+                        <li>Welding Core Access</li>
+                        <li>Basic Metrics</li>
+                    </ul>
+                    <a href="#" class="btn btn-secondary" style="width:100%;">Start Trial</a>
+                </div>
 
-    // Smooth scroll
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
+                <div class="glass-card featured-card reveal">
+                    <span style="background:var(--color-purple); color:white; padding: 4px 12px; border-radius:12px; font-size:0.8rem; font-weight:bold; margin-bottom:1rem; display:inline-block;">POPULAR</span>
+                    <h3>Lab Class</h3>
+                    <div class="price-tag">Custom</div>
+                    <ul class="feature-list">
+                        <li>10-20 Headsets</li>
+                        <li>Full Access (Weld, HVAC, PLC)</li>
+                        <li>Instructor Dashboard</li>
+                        <li>LMS Integration</li>
+                    </ul>
+                    <a href="#" class="btn btn-primary" style="width:100%;">Get Quote</a>
+                </div>
+
+                <div class="glass-card reveal">
+                    <h3>District</h3>
+                    <div class="price-tag">Lifetime</div>
+                    <ul class="feature-list">
+                        <li>Unlimited Headsets</li>
+                        <li>Hardware Bundles</li>
+                        <li>On-site Training</li>
+                    </ul>
+                    <a href="#" class="btn btn-secondary" style="width:100%;">Contact Sales</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer style="text-align: center; padding: 4rem 0; background: rgba(255,255,255,0.5); border-top: 1px solid rgba(0,0,0,0.05);">
+        <div class="container">
+            <h2 style="font-size: 1.5rem; margin-bottom: 1rem;">VRWELD</h2>
+            <p>&copy; 2024 VRWeld. Unlocking Youth Trade Skill Potential.</p>
+        </div>
+    </footer>
+
+    <script>
+        // High Performance Scroll Reveal using IntersectionObserver
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target); // Only animate once for performance
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach((el) => {
+            observer.observe(el);
         });
-    });
-</script>
+    </script>
 </body>
 </html>
